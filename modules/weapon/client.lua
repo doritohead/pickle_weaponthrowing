@@ -93,20 +93,44 @@ CreateThread(function()
         local wait = 1000
         local ped = PlayerPedId()
         if not IsPlayerDead(ped) and not IsPedInAnyVehicle(ped, true) then 
+            while not HasStreamedTextureDictLoaded("inspired_target") do Wait(10) RequestStreamedTextureDict("inspired_target", true) end
             for k,v in pairs(ThrownWeapons) do 
                 if NetworkDoesNetworkIdExist(v.net_id) then 
                     local entity = NetToObj(v.net_id)
                     local coords = GetEntityCoords(entity)
                     local dist = #(GetEntityCoords(ped) - coords)
-                    if dist < 5.0 then 
+                    if dist < 10 then
                         wait = 0
-                        if dist < 1.25 and not ShowInteractText(_L("pickup_weapon")) and IsControlJustPressed(1, 51) then 
+                        SetDrawOrigin(coords.x, coords.y, coords.z, 0)
+                        if dist > 7.5 and dist < 10 then
+                            DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 100)
+                        end
+                        if dist > 5.0 and dist < 7.5 then
+                            DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 190)
+                        end
+                        if dist < 5.0 then
+                            DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 255)
+                        end
+                        --[[if dist > 2.0 and dist < 3.5 then -- This is for the "To pickup" text
+                            DrawSprite("inspired_target", "pickup", 0.044, 0, 0.06, 0.028, 0, 255, 255, 255, 100)
+                        end
+                        if dist > 1 and dist < 2.0 then
+                            DrawSprite("inspired_target", "pickup", 0.044, 0, 0.06, 0.028, 0, 255, 255, 255, 190)
+                        end
+                        if dist < 1 then
+                            DrawSprite("inspired_target", "pickup", 0.044, 0, 0.06, 0.028, 0, 255, 255, 255, 255)
+                        end]]--
+                        ClearDrawOrigin()
+                        
+                        if IsControlJustPressed(1, 51) then
                             ClearPedTasksImmediately(ped)
                             FreezeEntityPosition(ped, true)
                             PlayAnim(ped, "pickup_object", "pickup_low", -8.0, 8.0, -1, 49, 1.0)
-                            Wait(800)
+                            Wait(1000)
                             TriggerServerEvent("pickle_weaponthrowing:pickupWeapon", k)
-                            Wait(800)
+                            Wait(450)
+                            PlayAnim(ped, "reaction@intimidation@1h", 'intro', 8.0, 3.0, -1, 50, 0)
+                            Wait(1000)
                             ClearPedTasks(ped)
                             FreezeEntityPosition(ped, false)
                         end
