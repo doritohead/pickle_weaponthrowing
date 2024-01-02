@@ -99,16 +99,16 @@ CreateThread(function()
                     local entity = NetToObj(v.net_id)
                     local coords = GetEntityCoords(entity)
                     local dist = #(GetEntityCoords(ped) - coords)
-                    if dist < 10 then
+                    if dist < 5 then
                         wait = 0
                         SetDrawOrigin(coords.x, coords.y, coords.z, 0)
-                        if dist > 7.5 and dist < 10 then
+                        if dist > 4.5 and dist < 5 then
                             DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 100)
                         end
-                        if dist > 5.0 and dist < 7.5 then
+                        if dist > 3.0 and dist < 4.5 then
                             DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 190)
                         end
-                        if dist < 5.0 then
+                        if dist < 3.0 then
                             DrawSprite("inspired_target", "key", 0, 0, 0.02, 0.035, 0, 255, 255, 255, 255)
                         end
                         --[[if dist > 2.0 and dist < 3.5 then -- This is for the "To pickup" text
@@ -121,18 +121,19 @@ CreateThread(function()
                             DrawSprite("inspired_target", "pickup", 0.044, 0, 0.06, 0.028, 0, 255, 255, 255, 255)
                         end]]--
                         ClearDrawOrigin()
-                        
-                        if IsControlJustPressed(1, 51) then
-                            ClearPedTasksImmediately(ped)
-                            FreezeEntityPosition(ped, true)
-                            PlayAnim(ped, "pickup_object", "pickup_low", -8.0, 8.0, -1, 49, 1.0)
-                            Wait(1000)
-                            TriggerServerEvent("pickle_weaponthrowing:pickupWeapon", k)
-                            Wait(450)
-                            PlayAnim(ped, "reaction@intimidation@1h", 'intro', 8.0, 3.0, -1, 50, 0)
-                            Wait(1000)
-                            ClearPedTasks(ped)
-                            FreezeEntityPosition(ped, false)
+                        if dist < 1.5 then
+                            if IsControlJustPressed(1, 51) then
+                                ClearPedTasksImmediately(ped)
+                                FreezeEntityPosition(ped, true)
+                                PlayAnim(ped, "pickup_object", "pickup_low", -8.0, 8.0, -1, 49, 1.0)
+                                Wait(1000)
+                                TriggerServerEvent("pickle_weaponthrowing:pickupWeapon", k)
+                                Wait(450)
+                                PlayAnim(ped, "reaction@intimidation@1h", 'intro', 8.0, 3.0, -1, 50, 0)
+                                Wait(1000)
+                                ClearPedTasks(ped)
+                                FreezeEntityPosition(ped, false)
+                            end
                         end
                     end
                 end
